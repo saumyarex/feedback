@@ -22,3 +22,5 @@ async function DbConnect() {
     process.exit(1);
   }
 }
+
+export default DbConnect;
