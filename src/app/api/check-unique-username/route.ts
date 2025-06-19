@@ -1,0 +1,40 @@
+import DbConnect from "@/lib/DbConnect";
+import UserModel from "@/models/User";
+import { NextRequest, NextResponse } from "next/server";
+import { username } from "@/schemas/signUpSchema";
+
+
+export async function GET(request: NextRequest) {
+    DbConnect();
+
+    try {
+
+        const {searchParams} = new URL(request.url)
+        const usernameByUser = searchParams.get("username")
+
+        const result = username.safeParse(usernameByUser);
+        console.log(result)
+
+        if(!result.success){
+             return NextResponse.json({success : false, error: result.error}, {status: 400})
+        }
+
+        const verifiedUsernameExist =  await UserModel.findOne({username: usernameByUser, isVerified: true})
+
+        if(verifiedUsernameExist){
+             return NextResponse.json({success : false, error: "Username already taken"}, {status: 400})
+        }else{
+            return NextResponse.json({success : true, error: "Username available"}, {status: 200})
+        }
+
+        
+    } catch (error: unknown) {
+        console.log(`Error checking username availablity : ${error}`)
+        if(error instanceof Error){
+            return NextResponse.json({success : false, error: error.message}, {status: 500})
+        }else{
+            return NextResponse.json({success : false, error: "Internal server error"}, {status: 500})
+        }
+
+    }
+}
