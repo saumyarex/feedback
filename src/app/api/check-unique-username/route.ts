@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
         if(verifiedUsernameExist){
              return NextResponse.json({success : false, error: "Username already taken"}, {status: 400})
         }else{
-            return NextResponse.json({success : true, error: "Username available"}, {status: 200})
+            return NextResponse.json({success : true, message: "Username available"}, {status: 200})
         }
 
         
