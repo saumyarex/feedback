@@ -1,7 +1,7 @@
 import DbConnect from "@/lib/DbConnect";
 import UserModel from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
-import { username } from "@/schemas/signUpSchema";
+import { usernameValidation } from "@/schemas/signUpSchema";
 
 
 export async function GET(request: NextRequest) {
@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
         const {searchParams} = new URL(request.url)
         const usernameByUser = searchParams.get("username")
 
-        const result = username.safeParse(usernameByUser);
+        const result = usernameValidation.safeParse(usernameByUser);
         console.log(result)
 
         if(!result.success){
