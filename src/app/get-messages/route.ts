@@ -33,7 +33,7 @@ export async function GET() {
             return NextResponse.json({success: false, error:"User not found"}, {status: 404})
         }
 
-        return NextResponse.json({success: false, message: "Messages fetched successfully", messages: receivedUser[0].messages}, {status: 200})
+        return NextResponse.json({success: true, message: "Messages fetched successfully", messages: receivedUser[0].messages}, {status: 200})
         
     } catch (error) {
         console.log("Error fetching messages: ", error)
