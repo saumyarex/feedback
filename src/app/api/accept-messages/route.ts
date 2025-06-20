@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
         userFound.isAcceptingMessages = acceptMessages;
         await userFound.save();
 
-        return NextResponse.json({success: false, message:"User message accepting prefrence updated"}, {status: 200})
+        return NextResponse.json({success: true, message:"User message accepting prefrence updated"}, {status: 200})
         
     } catch (error:unknown) {
         console.log("Error updating reqest message option: ", error)
@@ -61,7 +61,7 @@ export async function GET() {
                 return NextResponse.json({success: false, error:"User not found"}, {status: 404})
             }
 
-            return NextResponse.json({success: false, isAcceptingMessages: userFound.isAcceptingMessages}, {status: 200})
+            return NextResponse.json({success: true, isAcceptingMessages: userFound.isAcceptingMessages}, {status: 200})
             
         } catch (error: unknown) {
             console.log("Error retrieving message acceptance status : ", error)
