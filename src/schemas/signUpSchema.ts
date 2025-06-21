@@ -10,7 +10,7 @@ export const signUpSchema = z.object({
 
     email: z.string().email(),
 
-    password: z.string()
-    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,{message: "Password must have at least one lowercase, uppercase latter, digit and special character from (@$!%*?&)"})
+    password: z.string().min(6, "Password must be at least six characters")
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,{message: "Password must have at least one lowercase, uppercase latter, digit and special character from (@$!%*?&)"})
 })
 
