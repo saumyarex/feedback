@@ -17,11 +17,11 @@ export async function POST(request: NextRequest) {
         })
 
         if(!validateUsername.success){
-            return NextResponse.json({success: false, message: validateUsername.error},{status: 400})
+            return NextResponse.json({success: false, message: validateUsername.error.issues[0].message},{status: 400})
         }
 
         if(!validateVerifyCode.success){
-            return NextResponse.json({success: false, message: validateVerifyCode.error},{status: 400})
+            return NextResponse.json({success: false, message: validateVerifyCode.error.issues[0].message},{status: 400})
         }
 
         const user = await UserModel.findOne({username});

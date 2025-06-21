@@ -14,12 +14,12 @@ export async function POST(request: NextRequest) {
         //zod validation
         const validUsername = usernameValidation.safeParse(username);
         if(!validUsername.success){
-            return NextResponse.json({success: false, message: validUsername.error}, {status: 400})
+            return NextResponse.json({success: false, message: validUsername.error.issues[0].message}, {status: 400})
         }
 
         const validMessage = messageSchema.safeParse(message);
         if(!validMessage.success){
-            return NextResponse.json({success: false, message: validMessage.error}, {status: 400})
+            return NextResponse.json({success: false, message: validMessage.error.issues[0].message}, {status: 400})
         }
 
         const user = await UserModel.findOne({username});

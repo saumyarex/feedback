@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
         console.log(result)
 
         if(!result.success){
-             return NextResponse.json({success : false, message: result.error}, {status: 400})
+             return NextResponse.json({success : false, message: result.error.issues[0].message}, {status: 400})
         }
 
         const verifiedUsernameExist =  await UserModel.findOne({username: usernameByUser, isVerified: true})
