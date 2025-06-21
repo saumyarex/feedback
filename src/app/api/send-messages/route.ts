@@ -14,22 +14,22 @@ export async function POST(request: NextRequest) {
         //zod validation
         const validUsername = usernameValidation.safeParse(username);
         if(!validUsername.success){
-            return NextResponse.json({success: false, error: validUsername.error}, {status: 400})
+            return NextResponse.json({success: false, message: validUsername.error}, {status: 400})
         }
 
         const validMessage = messageSchema.safeParse(message);
         if(!validMessage.success){
-            return NextResponse.json({success: false, error: validMessage.error}, {status: 400})
+            return NextResponse.json({success: false, message: validMessage.error}, {status: 400})
         }
 
         const user = await UserModel.findOne({username});
 
         if(!user){
-            return NextResponse.json({success: false, error: "User not found. Please check username"}, {status: 404})
+            return NextResponse.json({success: false, message: "User not found. Please check username"}, {status: 404})
         }
 
         if(!user.isAcceptingMessages){
-            return NextResponse.json({success: false, error: "User is no longer accepting feedbacks"}, {status: 403})
+            return NextResponse.json({success: false, message: "User is no longer accepting feedbacks"}, {status: 403})
         }
 
         const feedBackMessage = {
@@ -46,9 +46,9 @@ export async function POST(request: NextRequest) {
     } catch (error) {
          console.log("Error sending messages: ", error)
         if(error instanceof Error){
-            return NextResponse.json({success: false, error: error.message}, {status: 500})
+            return NextResponse.json({success: false, message: error.message}, {status: 500})
         }else {
-            return NextResponse.json({success: false, error: "Internal server error"}, {status: 500})
+            return NextResponse.json({success: false, message: "Internal server error"}, {status: 500})
         }
     }
 }

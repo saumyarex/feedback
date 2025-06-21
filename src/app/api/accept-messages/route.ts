@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
         const user: User = session?.user as User;
 
         if(!user){
-            return NextResponse.json({success: false, error:"Unathorized request. Please login first"}, {status: 401})
+            return NextResponse.json({success: false, message:"Unathorized request. Please login first"}, {status: 401})
         }
 
     try {
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
         const userFound = await UserModel.findById(user._id);
 
         if(!userFound){
-            return NextResponse.json({success: false, error:"User not found"}, {status: 404})
+            return NextResponse.json({success: false, message:"User not found"}, {status: 404})
         }
 
         userFound.isAcceptingMessages = acceptMessages;
@@ -35,9 +35,9 @@ export async function POST(request: NextRequest) {
         console.log("Error updating reqest message option: ", error)
         
         if(error instanceof Error){
-            return NextResponse.json({success: false, error: error.message}, {status: 500})
+            return NextResponse.json({success: false, message: error.message}, {status: 500})
         }else {
-            return NextResponse.json({success: false, error: "Internal server error"}, {status: 500})
+            return NextResponse.json({success: false, message: "Internal server error"}, {status: 500})
         }
     }
 }

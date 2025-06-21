@@ -16,13 +16,13 @@ export async function GET(request: NextRequest) {
         console.log(result)
 
         if(!result.success){
-             return NextResponse.json({success : false, error: result.error}, {status: 400})
+             return NextResponse.json({success : false, message: result.error}, {status: 400})
         }
 
         const verifiedUsernameExist =  await UserModel.findOne({username: usernameByUser, isVerified: true})
 
         if(verifiedUsernameExist){
-             return NextResponse.json({success : false, error: "Username already taken"}, {status: 400})
+             return NextResponse.json({success : false, message: "Username already taken"}, {status: 400})
         }else{
             return NextResponse.json({success : true, message: "Username available"}, {status: 200})
         }
@@ -31,9 +31,9 @@ export async function GET(request: NextRequest) {
     } catch (error: unknown) {
         console.log(`Error checking username availablity : ${error}`)
         if(error instanceof Error){
-            return NextResponse.json({success : false, error: error.message}, {status: 500})
+            return NextResponse.json({success : false, message: error.message}, {status: 500})
         }else{
-            return NextResponse.json({success : false, error: "Internal server error"}, {status: 500})
+            return NextResponse.json({success : false, message: "Internal server error"}, {status: 500})
         }
 
     }

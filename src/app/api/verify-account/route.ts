@@ -17,21 +17,21 @@ export async function POST(request: NextRequest) {
         })
 
         if(!validateUsername.success){
-            return NextResponse.json({success: false, error: validateUsername.error},{status: 400})
+            return NextResponse.json({success: false, message: validateUsername.error},{status: 400})
         }
 
         if(!validateVerifyCode.success){
-            return NextResponse.json({success: false, error: validateVerifyCode.error},{status: 400})
+            return NextResponse.json({success: false, message: validateVerifyCode.error},{status: 400})
         }
 
         const user = await UserModel.findOne({username});
 
         if(!user){
-            return NextResponse.json({success: false, error: "User does not exists. Please check username"},{status: 400})
+            return NextResponse.json({success: false, message: "User does not exists. Please check username"},{status: 400})
         }else if(!(user.verifyCode === verifyCode)){
-            return NextResponse.json({success: false, error: "Invalid verification code. Please signUp again"},{status: 400})
+            return NextResponse.json({success: false, message: "Invalid verification code. Please signUp again"},{status: 400})
         }else if(!(user.verifyCodeExpiry.getTime() > Date.now())){
-            return NextResponse.json({success: false, error: "Verification code expired. Please signUp again"},{status: 400})
+            return NextResponse.json({success: false, message: "Verification code expired. Please signUp again"},{status: 400})
         }else{
             user.isVerified = true;
             user.verifyCode = "";
@@ -44,9 +44,9 @@ export async function POST(request: NextRequest) {
     } catch (error: unknown) {
         console.log(`Error verifying account: ${error}`)
         if(error instanceof Error){
-           return NextResponse.json({success: false, error: error.message},{status: 500})
+           return NextResponse.json({success: false, message: error.message},{status: 500})
         }else{
-            return NextResponse.json({success: false, error: "Internal server error"},{status: 500})
+            return NextResponse.json({success: false, message: "Internal server error"},{status: 500})
         }
     }
 }
