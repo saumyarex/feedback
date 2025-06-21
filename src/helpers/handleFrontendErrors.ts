@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "sonner"
 
-export function handleFrontendErrors(error: unknown, useToast?:false){
+export function handleFrontendErrors(error: unknown, useToast?:boolean){
     console.error(error)
     if (axios.isAxiosError(error)) {
         console.error(error.response?.data.error);
