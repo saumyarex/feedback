@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
         const usernameByUser = searchParams.get("username")
 
         const result = usernameValidation.safeParse(usernameByUser);
-        console.log(result)
+        //console.log(result)
 
         if(!result.success){
              return NextResponse.json({success : false, message: result.error.issues[0].message}, {status: 400})
