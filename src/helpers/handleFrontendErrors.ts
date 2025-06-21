@@ -1,15 +1,23 @@
 import axios from "axios";
 import { toast } from "sonner"
 
-export function handleFrontendErrors(error: unknown){
-    console.log(error)
+export function handleFrontendErrors(error: unknown, useToast:false){
+    console.error(error)
     if (axios.isAxiosError(error)) {
-        console.log(error.response?.data.error);
-        toast(error.response?.data.error)
+        console.error(error.response?.data.error);
+        if(useToast){
+          toast(error.response?.data.error)
+        }
       } else if (error instanceof Error) {
-        toast(error.message);
+        console.error(error.message);
+        if(useToast){
+          toast(error.message);
+        }
       } else {
-        toast("An unexpected error occurred");
+        console.error("An unexpected error occurred")
+        if(useToast){
+          toast("An unexpected error occurred");
+        }
       }
 }
 
