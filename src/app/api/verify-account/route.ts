@@ -10,6 +10,7 @@ export async function POST(request: NextRequest) {
     try {
 
         const {username, verifyCode} = await request.json()
+        //console.log({username, verifyCode})
         //const decodedUsername = decodeURIComponent(username);
         const validateUsername = usernameValidation.safeParse(username);
         const validateVerifyCode = verifySchema.safeParse({
@@ -28,10 +29,13 @@ export async function POST(request: NextRequest) {
 
         if(!user){
             return NextResponse.json({success: false, message: "User does not exists. Please check username"},{status: 400})
-        }else if(!(user.verifyCode === verifyCode)){
-            return NextResponse.json({success: false, message: "Invalid verification code. Please signUp again"},{status: 400})
+        }else if(user.isVerified){
+            return NextResponse.json({success: false, message: "User already verified. You can sing in"},{status: 409})
+        }
+        else if(!(user.verifyCode === verifyCode)){
+            return NextResponse.json({success: false, message: "Invalid verification code. Please enter correct code"},{status: 400})
         }else if(!(user.verifyCodeExpiry.getTime() > Date.now())){
-            return NextResponse.json({success: false, message: "Verification code expired. Please signUp again"},{status: 400})
+            return NextResponse.json({success: false, message: "Verification code expired. Please sign up again"},{status: 400})
         }else{
             user.isVerified = true;
             user.verifyCode = "";
