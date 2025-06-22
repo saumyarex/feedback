@@ -76,7 +76,7 @@ function SignUpPage() {
       }
     }
     isUsernameUnique();
-  }, [username]);
+  }, [username, usernameMessage]);
 
   return (
     <div className="flex flex-col min-h-screen justify-center items-center">
