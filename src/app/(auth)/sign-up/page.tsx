@@ -179,7 +179,7 @@ function SignUpPage() {
         <div className="text-center font-medium">
           <p>Already a member? </p>
           <Link href="/sign-in" className="text-blue-600 hover:text-blue-800">
-            Sign in
+            Sign In
           </Link>
         </div>
       </div>
