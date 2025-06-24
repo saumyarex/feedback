@@ -82,7 +82,8 @@ function SignUpPage() {
     <div className="flex flex-col min-h-screen justify-center items-center">
       <div className=" rounded-md border-black border-4 sm:p-20 p-5 m-5 max-w-xl ">
         <h1 className="text-4xl font-black text-center mb-5 ">
-          JOIN FEEBACK FOR <br className="sm:block hidden" /> TRUE FEEDBACK
+          JOIN <br className="sm:hidden block" /> TRUE FEEBACK FOR BRUTAL
+          FEEDBACKS
         </h1>
         <p className="mb-10 font-medium text-center">
           Sign up to start your anonymous adventure
