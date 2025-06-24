@@ -1,10 +1,9 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { signInSchema } from "@/schemas/signInSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import axios from "axios";
 import { handleFrontendErrors } from "@/helpers/handleFrontendErrors";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +19,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { LoaderCircle } from "lucide-react";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
 
 function SignInPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -28,15 +28,30 @@ function SignInPage() {
 
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
+    defaultValues: {
+      identifier: "",
+      password: "",
+    },
   });
 
   async function onSubmit(values: z.infer<typeof signInSchema>) {
     setIsSubmitting(true);
     try {
-      await axios.post("api/sign-up", values);
-      toast.success("Sign Up Success");
-      router.replace(`api/verify-account/${username}`);
+      console.log(values);
+      const response = await signIn("credentials", {
+        redirect: false,
+        identifier: values.identifier,
+        password: values.password,
+      });
+      console.log("response: ", response);
+      if (response?.error) {
+        throw new Error(response.error);
+      } else if (response?.url) {
+        toast.success("Sign In success");
+        router.replace("/user-dashboard");
+      }
     } catch (error) {
+      console.log("error", error);
       handleFrontendErrors(error, true);
     } finally {
       setIsSubmitting(false);
@@ -88,7 +103,11 @@ function SignInPage() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" disabled={isSubmitting}>
+              <Button
+                type="submit"
+                className="hover:cursor-pointer"
+                disabled={isSubmitting}
+              >
                 {isSubmitting ? (
                   <>
                     <LoaderCircle className="animate-spin" />
