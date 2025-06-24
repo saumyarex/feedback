@@ -6,7 +6,6 @@ import Link from "next/link";
 
 function NavBar() {
   const { data: session } = useSession();
-  console.log(session);
   return (
     <nav>
       <div className="flex flex-col sm:flex-row gap-5 p-5 bg-gray-800 justify-between items-center ">
