@@ -16,7 +16,7 @@ export const authOptions: NextAuthOptions =  {
         },
         authorize: async (credentials:any): Promise<any> => {
             await DbConnect();
-            console.log(credentials)
+            
             try {
                 const user = await UserModel.findOne({
                     $or: [
@@ -35,10 +35,11 @@ export const authOptions: NextAuthOptions =  {
 
                 const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
 
-                console.log("password validity:",isPasswordValid);
+               
                 if(!isPasswordValid){
                     throw new Error("Invalid password")
                 }else{
+                    
                     return user
                 }
 
