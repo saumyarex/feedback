@@ -4,6 +4,7 @@ import { authOptions } from "../auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
+import { User } from "next-auth";
 
 
 export async function GET() {
@@ -28,6 +29,7 @@ export async function GET() {
 
             } }
         ])
+
 
         if(!receivedUser){
             return NextResponse.json({success: false, message:"User not found"}, {status: 404})
