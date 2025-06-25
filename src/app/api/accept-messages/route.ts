@@ -19,6 +19,7 @@ export async function POST(request: NextRequest) {
     try {
 
         const {acceptMessages} = await request.json();
+        console.log(acceptMessages)
 
         const userFound = await UserModel.findById(user._id);
 
