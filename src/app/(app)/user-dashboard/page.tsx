@@ -23,24 +23,38 @@ import {
 } from "@/components/ui/card";
 import dayjs from "dayjs";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
 function UserDashboard() {
+  // extracting user's session info
   const { data: session } = useSession();
   const userUniqueURL = `${process.env.NEXT_PUBLIC_BASE_URL}/user/${session?.user.username}`;
   const uniqueURLRef = useRef<HTMLInputElement>(null);
 
+  // all state variables
   const [copyMessage, setCopyMessage] = useState("Copy");
   const [isSwitchLoading, setIsSwitchLoading] = useState(false);
   const [isMessagesLoading, setIsMessagesLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
 
+  // react-hook-from variables
   const form = useForm<z.infer<typeof acceptMessageSchmea>>({
     resolver: zodResolver(acceptMessageSchmea),
   });
-
   const { register, watch, setValue } = form;
-
   const acceptMessages = watch("acceptMessages") || false;
 
+  // function to handle on/off message accept switch
   async function handleSwitchChange() {
     try {
       setIsSwitchLoading(true);
@@ -55,6 +69,8 @@ function UserDashboard() {
       setIsSwitchLoading(false);
     }
   }
+
+  // funtion to handle copy to clipboard
   function copyToClipboard() {
     uniqueURLRef.current?.select();
     window.navigator.clipboard
@@ -71,6 +87,7 @@ function UserDashboard() {
       });
   }
 
+  //fucntion to check user accepting messages or not
   const getAcceptMessages = useCallback(async () => {
     try {
       setIsSwitchLoading(true);
@@ -83,11 +100,11 @@ function UserDashboard() {
     }
   }, [setValue]);
 
+  //fucntion to get messages from database
   const getMessages = useCallback(async () => {
     try {
       setIsMessagesLoading(true);
       const response = await axios.get("/api/get-messages");
-      console.log(response.data.messages);
       setMessages(response.data.messages);
     } catch (error) {
       console.log(error);
@@ -97,15 +114,28 @@ function UserDashboard() {
     }
   }, []);
 
+  //fucntion to run on each render
   useEffect(() => {
     getAcceptMessages();
     getMessages();
   }, [getAcceptMessages, getMessages]);
 
+  // function to delte messages
+  const deleteMessage = async (messageID: string) => {
+    try {
+      setMessages(messages.filter((message) => message._id !== messageID));
+      const response = await axios.delete(`/api/delete-message/${messageID}`);
+      console.log(response);
+      toast.success(response.data.message);
+    } catch (error) {
+      handleFrontendErrors(error, true);
+    }
+  };
+
   return (
     <>
       {session && (
-        <div className="flex flex-col p-5 py-10 md:p-20 sm:mx-30 mx-2">
+        <div className="flex flex-col p-5 py-10 md:p-20 sm:mx-20 lg:mx-30 mx-5">
           {/* Main container */}
           <div className="space-y-4">
             {/* Main heading: User Dashboard */}
@@ -165,7 +195,7 @@ function UserDashboard() {
             </div>
 
             {/* Messages */}
-            <div className="flex flex-wrap gap-10 justify-center">
+            <div className="grid lg:grid-cols-2 grid-cols-1  gap-10 justify-items-center ">
               {messages.map((message, index) => (
                 <Card className="w-full max-w-md " key={index}>
                   <CardHeader>
@@ -174,7 +204,32 @@ function UserDashboard() {
                       {dayjs(message.createdAt).format("YYYY MM-DD hh:mm A")}
                     </CardDescription>
                     <CardAction>
-                      <X className="text-white bg-red-500 size-7 hover:cursor-pointer hover:bg-red-600 " />
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <X className="text-white bg-red-500 size-7 hover:cursor-pointer hover:bg-red-600 " />
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Are you absolutely sure?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This action cannot be undone. This will
+                              permanently delete the message.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() =>
+                                deleteMessage(message._id as string)
+                              }
+                            >
+                              Continue
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </CardAction>
                   </CardHeader>
                 </Card>
