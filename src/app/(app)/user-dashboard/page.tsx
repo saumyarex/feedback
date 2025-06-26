@@ -156,7 +156,7 @@ function UserDashboard() {
               />
               <Button
                 className="rounded-r rounded-l-none hover:cursor-pointer font-semibold py-5"
-                onClick={(e) => copyToClipboard()}
+                onClick={() => copyToClipboard()}
               >
                 {copyMessage}
               </Button>
