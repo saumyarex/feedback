@@ -64,19 +64,17 @@ function SignUpPage() {
           setUsernameMessage(response.data.message);
         } catch (error: unknown) {
           if (axios.isAxiosError(error)) {
-            console.log(error);
             setUsernameMessage(error.response?.data.message);
           }
 
           handleFrontendErrors(error);
         } finally {
-          console.log("username text", usernameMessage);
           setIsCheckingUsername(false);
         }
       }
     }
     isUsernameUnique();
-  }, [username, usernameMessage]);
+  }, [username]);
 
   return (
     <div className="flex flex-col min-h-screen justify-center items-center">
