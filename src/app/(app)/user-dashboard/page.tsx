@@ -197,7 +197,7 @@ function UserDashboard() {
             {/* Messages */}
             <div className="grid lg:grid-cols-2 grid-cols-1  gap-10 justify-items-center ">
               {messages.map((message, index) => (
-                <Card className="w-full max-w-md " key={index}>
+                <Card className="w-full  " key={index}>
                   <CardHeader>
                     <CardTitle className="text-xl">{message.content}</CardTitle>
                     <CardDescription className="font-medium">
