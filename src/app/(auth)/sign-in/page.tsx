@@ -40,7 +40,7 @@ function SignInPage() {
       console.log(values);
       const response = await signIn("credentials", {
         redirect: false,
-        identifier: values.identifier,
+        identifier: values.identifier.toLowerCase(),
         password: values.password,
       });
       console.log("response: ", response);
