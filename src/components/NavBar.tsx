@@ -3,9 +3,23 @@ import React from "react";
 import { signOut, useSession } from "next-auth/react";
 import { Button } from "./ui/button";
 import Link from "next/link";
+import { handleFrontendErrors } from "@/helpers/handleFrontendErrors";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 function NavBar() {
   const { data: session } = useSession();
+  const router = useRouter();
+
+  function logout() {
+    try {
+      signOut();
+      router.replace("/");
+      toast.success("Logout successfully");
+    } catch (error) {
+      handleFrontendErrors(error, true);
+    }
+  }
   return (
     <nav className="absolute z-10 w-full">
       <div className="flex flex-col sm:flex-row gap-5 p-5 bg-gray-800 justify-between items-center">
@@ -19,7 +33,7 @@ function NavBar() {
             </span>
             <Button
               className="bg-neutral-200 text-black font-semibold hover:bg-neutral-300 hover:cursor-pointer"
-              onClick={() => signOut()}
+              onClick={() => logout()}
             >
               Logout
             </Button>
