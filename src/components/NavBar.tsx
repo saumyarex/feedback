@@ -11,9 +11,9 @@ function NavBar() {
   const { data: session } = useSession();
   const router = useRouter();
 
-  function logout() {
+  async function logout() {
     try {
-      signOut();
+      await signOut();
       router.replace("/");
       toast.success("Logout successfully");
     } catch (error) {
