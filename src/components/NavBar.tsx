@@ -7,8 +7,8 @@ import Link from "next/link";
 function NavBar() {
   const { data: session } = useSession();
   return (
-    <nav>
-      <div className="flex flex-col sm:flex-row gap-5 p-5 bg-gray-800 justify-between items-center ">
+    <nav className="absolute z-10 w-full">
+      <div className="flex flex-col sm:flex-row gap-5 p-5 bg-gray-800 justify-between items-center">
         <div className="text-xl font-bold text-neutral-100">
           <Link href={"/"}>TRUE FEEDBACK</Link>
         </div>
