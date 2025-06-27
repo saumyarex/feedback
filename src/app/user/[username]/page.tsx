@@ -78,7 +78,10 @@ function PublicProfilePage() {
   };
 
   return (
-    <div className="flex flex-col p-5 py-10 md:p-20 sm:mx-20 lg:mx-40 mx-5">
+    <div
+      id="message-box"
+      className="flex flex-col p-5 py-10 md:p-20 sm:mx-20 lg:mx-40 mx-5"
+    >
       <div>
         {/* Main heading */}
         <h1 className="text-center font-extrabold text-4xl">
@@ -86,7 +89,7 @@ function PublicProfilePage() {
         </h1>
 
         {/* Anonymous message box */}
-        <div id="message-box" className="mt-10 flex flex-col gap-4">
+        <div className="mt-10 flex flex-col gap-4">
           <h2 className="font-semibold sm:text-lg">
             Send Anonymous Message to @{username}
           </h2>
