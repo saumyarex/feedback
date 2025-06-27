@@ -38,8 +38,8 @@ import {
 function UserDashboard() {
   // extracting user's session info
   const { data: session } = useSession();
-  const userUniqueURL = `${process.env.NEXT_PUBLIC_BASE_URL}/user/${session?.user.username}`;
   const uniqueURLRef = useRef<HTMLInputElement>(null);
+  const userUniqueURL = `${window.location.protocol}//${window.location.host}/user/${session?.user.username}`;
 
   // all state variables
   const [copyMessage, setCopyMessage] = useState("Copy");
