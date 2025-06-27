@@ -42,7 +42,11 @@ function SignUpPage() {
   async function onSubmit(values: z.infer<typeof signUpSchema>) {
     setIsSubmitting(true);
     try {
-      await axios.post("api/sign-up", values);
+      await axios.post("api/sign-up", {
+        username: values.username.toLowerCase().trim(),
+        email: values.email.toLowerCase().trim(),
+        password: values.password,
+      });
       toast.success("Sign Up Success");
       router.replace(`api/verify-account/${username}`);
     } catch (error) {
