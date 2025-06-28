@@ -13,13 +13,15 @@ function NavBar() {
 
   async function logout() {
     try {
-      await signOut();
+      await signOut({ redirect: false });
       router.replace("/");
       toast.success("Logout successfully");
     } catch (error) {
+      console.log("logout error", error);
       handleFrontendErrors(error, true);
     }
   }
+
   return (
     <nav className="absolute z-10 w-full">
       <div className="flex flex-col sm:flex-row gap-5 p-5 bg-gray-800 justify-between items-center">
@@ -31,6 +33,7 @@ function NavBar() {
             <span className="text-white text-center font-bold sm:-ml-20">
               Welcome {session.user.username}
             </span>
+
             <Button
               className="bg-neutral-200 text-black font-semibold hover:bg-neutral-300 hover:cursor-pointer"
               onClick={() => logout()}
