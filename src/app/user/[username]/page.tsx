@@ -19,30 +19,16 @@ import axios from "axios";
 import { toast } from "sonner";
 import { LoaderCircle } from "lucide-react";
 import Link from "next/link";
+import { useCompletion } from "@ai-sdk/react";
+import { Separator } from "@/components/ui/separator";
 
 function PublicProfilePage() {
   const { username } = useParams();
 
   // general state variables
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSendingMessage, setIsSedingMessage] = useState(false);
   const [isSuggestMessageClicked, setIsSuggestMessageClicked] = useState(false);
   const [currentClickedMessage, setCurrentClickedMessage] = useState("");
-
-  //messages state varialbes
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      message: "Love your work",
-    },
-    {
-      id: 2,
-      message: "When are you launching next product line",
-    },
-    {
-      id: 3,
-      message: "When are you coming to India",
-    },
-  ]);
 
   const form = useForm<z.infer<typeof messageFormSchema>>({
     resolver: zodResolver(messageFormSchema),
@@ -53,9 +39,10 @@ function PublicProfilePage() {
 
   const { setValue } = form;
 
+  // submitting message to user
   const onSubmit = async (data: z.infer<typeof messageFormSchema>) => {
     try {
-      setIsLoading(true);
+      setIsSedingMessage(true);
       const response = await axios.post("/api/send-messages", {
         username,
         message: data.content,
@@ -64,7 +51,7 @@ function PublicProfilePage() {
     } catch (error) {
       handleFrontendErrors(error, true);
     } finally {
-      setIsLoading(false);
+      setIsSedingMessage(false);
     }
   };
 
@@ -77,6 +64,26 @@ function PublicProfilePage() {
     }, 200);
   };
 
+  //getting suggest messages from ai
+  const {
+    completion,
+    complete,
+    error: apiError,
+    isLoading,
+  } = useCompletion({
+    api: "/api/suggest-messages",
+    initialCompletion:
+      "Love your work||When are you launching next product line||When are you coming to India",
+  });
+
+  const getSuggestedMessages = async () => {
+    try {
+      await complete("");
+    } catch (error) {
+      console.error(error);
+      console.log("Error suggesting messages :", apiError);
+    }
+  };
   return (
     <div
       id="message-box"
@@ -119,7 +126,7 @@ function PublicProfilePage() {
                 className="self-center hover:cursor-pointer"
                 type="submit"
               >
-                {isLoading ? (
+                {isSendingMessage ? (
                   <>
                     {" "}
                     <LoaderCircle className="animate-spin" /> Sending ...
@@ -134,7 +141,17 @@ function PublicProfilePage() {
 
         {/* suggest messgaes */}
         <div className="mt-10 flex flex-col gap-5">
-          <Button className="self-start">Suggest Messages</Button>
+          <Button
+            disabled={isLoading}
+            className="self-start"
+            onClick={getSuggestedMessages}
+          >
+            {isLoading ? (
+              <LoaderCircle className="animate-spin/>" />
+            ) : (
+              "Suggest Messages"
+            )}
+          </Button>
           <h2 className="font-medium text-lg">
             Click on any message to select it.
           </h2>
@@ -142,20 +159,22 @@ function PublicProfilePage() {
           {/* suggested messages options */}
           <div className="flex flex-col gap-5 px-5 py-6 border-2 border-gray-100 rounded-md">
             <h3 className="text-xl font-semibold">Messages</h3>
-            {messages.map((message) => (
-              <Link href={"#message-box"} key={message.id}>
+            {isLoading ? <LoaderCircle className="animate-spin" /> : null}
+            {completion.split("||").map((message, index) => (
+              <Link href={"#message-box"} key={index}>
                 <div
-                  className={` text-center border-2 border-gray-50 py-2 hover:bg-gray-100 hover:cursor-pointer font-medium rounded-md ${isSuggestMessageClicked && currentClickedMessage === message.id.toString() ? "bg-gray-100" : ""} `}
+                  className={` text-center border-2 border-gray-50 py-2 hover:bg-gray-100 hover:cursor-pointer font-medium rounded-md ${isSuggestMessageClicked && currentClickedMessage === index.toString() ? "bg-gray-100" : ""} `}
                   onClick={() =>
-                    copySuggestedMessage(message.id.toString(), message.message)
+                    copySuggestedMessage(index.toString(), message)
                   }
                 >
-                  {message.message}
+                  {message}
                 </div>
               </Link>
             ))}
           </div>
 
+          <Separator className="mt-10" />
           {/* create your own account */}
           <div className="flex flex-col items-center gap-3 mt-5">
             <h2 className="font-semibold text-base">Get Your Message Board</h2>
