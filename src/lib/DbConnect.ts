@@ -13,12 +13,16 @@ async function DbConnect() {
     return
   }
   try {
-    const DB = await mongoose.connect(process.env.MONGO_URI || "");
+    const DB = await mongoose.connect(`${process.env.MONGO_URI}/true-feedback` || "");
     connection.isConnected = DB.connections[0].readyState;
 
     console.log("DB connected successfully")
   } catch (error) {
-    console.log("DB Connection error : ", error.message)
+    if (error instanceof Error) {
+      console.log("DB Connection error : ", error.message);
+    } else {
+      console.log("DB Connection error : ", error);
+    }
     process.exit(1);
   }
 }
