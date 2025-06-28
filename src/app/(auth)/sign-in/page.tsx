@@ -37,13 +37,11 @@ function SignInPage() {
   async function onSubmit(values: z.infer<typeof signInSchema>) {
     setIsSubmitting(true);
     try {
-      console.log(values);
       const response = await signIn("credentials", {
         redirect: false,
         identifier: values.identifier.toLowerCase().trim(),
         password: values.password,
       });
-      console.log("response: ", response);
       if (response?.error) {
         throw new Error(response.error);
       } else if (response?.url) {
@@ -51,7 +49,6 @@ function SignInPage() {
         router.replace("/user-dashboard");
       }
     } catch (error) {
-      console.log("error", error);
       handleFrontendErrors(error, true);
     } finally {
       setIsSubmitting(false);
