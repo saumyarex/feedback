@@ -48,7 +48,7 @@ function SignUpPage() {
         password: values.password,
       });
       toast.success("Sign Up Success");
-      router.replace(`api/verify-account/${username}`);
+      router.replace(`/verify-account/${username}`);
     } catch (error) {
       handleFrontendErrors(error, true);
     } finally {
