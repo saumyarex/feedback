@@ -19,7 +19,7 @@ export async function GET() {
 
     try {
 
-        const receivedUser = await UserModel.aggregate([
+        const receivedMessages = await UserModel.aggregate([
             {$match: {_id : new mongoose.Types.ObjectId(user._id)}},
             {$unwind: "$messages" },
             {$sort: { "messages.createdAt" : -1 }},
@@ -30,12 +30,14 @@ export async function GET() {
             } }
         ])
 
-
-        if(!receivedUser){
-            return NextResponse.json({success: false, message:"User not found"}, {status: 404})
+        console.log("received messages",receivedMessages)
+        
+        if(receivedMessages.length === 0){
+            return NextResponse.json({success: true, message: "No messages yet", messages: []}, {status: 200})
         }
 
-        return NextResponse.json({success: true, message: "Messages fetched successfully", messages: receivedUser[0].messages}, {status: 200})
+        return NextResponse.json({success: true, message: "Messages fetched successfully", messages: receivedMessages[0].messages}, {status: 200})
+
         
     } catch (error) {
         console.log("Error fetching messages: ", error)
