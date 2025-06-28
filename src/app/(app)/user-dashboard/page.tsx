@@ -39,13 +39,14 @@ function UserDashboard() {
   // extracting user's session info
   const { data: session } = useSession();
   const uniqueURLRef = useRef<HTMLInputElement>(null);
-  const userUniqueURL = `${window.location.protocol}//${window.location.host}/user/${session?.user.username}`;
+  // const userUniqueURL = `${window.location.protocol}//${window.location.host}/user/${session?.user.username}`;
 
   // all state variables
   const [copyMessage, setCopyMessage] = useState("Copy");
   const [isSwitchLoading, setIsSwitchLoading] = useState(false);
   const [isMessagesLoading, setIsMessagesLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [userUniqueURL, setUserUniqueURL] = useState("");
 
   // react-hook-from variables
   const form = useForm<z.infer<typeof acceptMessageSchmea>>({
@@ -116,9 +117,14 @@ function UserDashboard() {
 
   //fucntion to run on each render
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      setUserUniqueURL(
+        `${window.location.protocol}//${window.location.host}/user/${session?.user.username}`
+      );
+    }
     getAcceptMessages();
     getMessages();
-  }, [getAcceptMessages, getMessages]);
+  }, [getAcceptMessages, getMessages, session?.user.username]);
 
   // function to delte messages
   const deleteMessage = async (messageID: string) => {
@@ -153,6 +159,7 @@ function UserDashboard() {
                 defaultValue={userUniqueURL}
                 className="w-full bg-gray-50 px-2 py-2 rounded-l text-black text-sm sm:text-base font-medium"
                 ref={uniqueURLRef}
+                disabled
               />
               <Button
                 className="rounded-r rounded-l-none hover:cursor-pointer font-semibold py-5"
