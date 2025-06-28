@@ -122,9 +122,12 @@ function UserDashboard() {
         `${window.location.protocol}//${window.location.host}/user/${session?.user.username}`
       );
     }
-    getAcceptMessages();
-    getMessages();
-  }, [getAcceptMessages, getMessages, session?.user.username]);
+
+    if (session) {
+      getAcceptMessages();
+      getMessages();
+    }
+  }, [getAcceptMessages, getMessages, session?.user.username, session]);
 
   // function to delte messages
   const deleteMessage = async (messageID: string) => {
